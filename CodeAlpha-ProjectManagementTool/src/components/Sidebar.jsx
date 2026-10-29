@@ -60,15 +60,7 @@ export default function Sidebar({ active = "Dashboard", onNavigate }) {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="nav-link"
-          onClick={() => onNavigate?.("/login")}
-          style={{ width: "100%", border: 0, background: "transparent", textAlign: "left", marginTop: 15 }}
-        >
-          <LogOut size={19} />
-          <span className="nav-text">Sign in</span>
-        </button>
+        
       </div>
     </aside>
   );

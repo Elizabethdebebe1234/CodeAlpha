@@ -28,17 +28,24 @@ router.get("/", async (req, res) => {
 // POST /api/projects — create a project
 router.post("/", async (req, res) => {
   try {
-    const { title, description = "" } = req.body;
+    const { title, description = "", priority } = req.body;
 
     if (!title?.trim()) {
       return res.status(400).json({ message: "Project title is required" });
     }
+
+    const safePriority = ["HIGH", "MEDIUM", "LOW"].includes(
+      String(priority || "").toUpperCase()
+    )
+      ? String(priority || "").toUpperCase()
+      : "MEDIUM";
 
     const project = await prisma.project.create({
       data: {
         title: title.trim(),
         description: String(description),
         ownerId: req.user.id,
+        priority: safePriority,
       },
     });
 
@@ -81,6 +88,7 @@ router.get("/:projectId/tasks", async (req, res) => {
 
 // POST /api/projects/:projectId/tasks — create a task
 router.post("/:projectId/tasks", async (req, res) => {
+  
   try {
     const { title, description = "", priority = "MEDIUM", dueDate, assigneeId } = req.body;
 
@@ -105,21 +113,24 @@ router.post("/:projectId/tasks", async (req, res) => {
     }
 
     if (assigneeId) {
-      const assignee = await prisma.user.findUnique({
-        where: { id: assigneeId },
-      });
+  const assignee = await prisma.user.findUnique({
+    where: { id: assigneeId },
+    select: { id: true },
+  });
 
-      if (!assignee) {
-        return res.status(400).json({ message: "Assignee not found" });
-      }
-    }
+  if (!assignee) {
+    return res.status(400).json({ message: "Assignee not found" });
+  }
+}
 
     const task = await prisma.task.create({
       data: {
         title: title.trim(),
         description: String(description),
         priority,
-        dueDate: dueDate ? new Date(dueDate) : null,
+        dueDate: req.body.dueDate
+      ? new Date(`${req.body.dueDate}T12:00:00`)
+      : null,
         projectId: project.id,
         assigneeId: assigneeId || null,
       },

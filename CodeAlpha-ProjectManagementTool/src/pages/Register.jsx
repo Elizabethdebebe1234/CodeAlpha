@@ -1,14 +1,25 @@
 
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Register({ onNavigate }) {
+  const { register, loading } = useAuth();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    window.alert("Registration UI only. Backend registration comes next.");
+    setError("");
+
+    try {
+      await register({ name, email, password });
+      onNavigate?.("/");
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+    }
   }
 
   return (
@@ -23,6 +34,7 @@ export default function Register({ onNavigate }) {
             id="name"
             value={name}
             onChange={(event) => setName(event.target.value)}
+            autoComplete="name"
             required
           />
         </div>
@@ -34,6 +46,7 @@ export default function Register({ onNavigate }) {
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            autoComplete="email"
             required
           />
         </div>
@@ -46,18 +59,33 @@ export default function Register({ onNavigate }) {
             minLength={8}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            autoComplete="new-password"
             required
           />
         </div>
 
-        <button className="primary-button" type="submit">
-          Create Account
+        {error && (
+          <p role="alert" style={{ color: "crimson" }}>
+            {error}
+          </p>
+        )}
+
+        <button
+          className="primary-button"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? "Creating account..." : "Create Account"}
         </button>
       </form>
 
       <p style={{ marginTop: 20 }}>
         Already registered?{" "}
-        <button className="secondary-button" onClick={() => onNavigate?.("/login")}>
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={() => onNavigate?.("/login")}
+        >
           Sign In
         </button>
       </p>

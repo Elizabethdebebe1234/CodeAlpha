@@ -1,13 +1,24 @@
 
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login({ onNavigate }) {
+  const { login, loading } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    window.alert("Login UI only. Backend authentication will be connected next.");
+    setError("");
+
+    try {
+      await login({ email, password });
+      onNavigate?.("/");
+    } catch (err) {
+      setError(err.message || "Login failed. Please try again.");
+    }
   }
 
   return (
@@ -23,6 +34,7 @@ export default function Login({ onNavigate }) {
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            autoComplete="email"
             required
           />
         </div>
@@ -34,18 +46,33 @@ export default function Login({ onNavigate }) {
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
             required
           />
         </div>
 
-        <button className="primary-button" type="submit">
-          Sign In
+        {error && (
+          <p role="alert" style={{ color: "crimson" }}>
+            {error}
+          </p>
+        )}
+
+        <button
+          className="primary-button"
+          type="submit"
+          disabled={loading}
+        >
+          {loading ? "Signing in..." : "Sign In"}
         </button>
       </form>
 
       <p style={{ marginTop: 20 }}>
         New here?{" "}
-        <button className="secondary-button" onClick={() => onNavigate?.("/register")}>
+        <button
+          type="button"
+          className="secondary-button"
+          onClick={() => onNavigate?.("/register")}
+        >
           Create Account
         </button>
       </p>

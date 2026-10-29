@@ -11,14 +11,12 @@ async function findAccessibleTask(taskId, userId) {
   return prisma.task.findFirst({
     where: {
       id: taskId,
-      OR: [
-        { project: { ownerId: userId } },
-        { assigneeId: userId },
-      ],
+      project: {
+        ownerId: userId,
+      },
     },
   });
 }
-
 // PATCH /api/tasks/:id — update status, priority or assignment
 router.patch("/:id", async (req, res) => {
   try {

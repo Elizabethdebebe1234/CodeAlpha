@@ -595,3 +595,124 @@ button:disabled {
     gap: 7px;
   }
 }
+
+
+/* TaskFlow professional task form */
+.task-form {
+  max-width: 650px;
+  margin-bottom: 28px;
+  box-shadow: 0 12px 35px rgba(28, 73, 56, 0.07);
+  animation: taskFormIn 0.2s ease-out;
+}
+
+.task-form h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.form-description {
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.task-form .form-group input,
+.task-form .form-group textarea,
+.task-form .form-group select {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.task-form .form-group input:focus,
+.task-form .form-group textarea:focus,
+.task-form .form-group select:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(28, 73, 56, 0.1);
+}
+
+.task-form input[type="date"] {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.task-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.task-card {
+  box-shadow: 0 2px 5px rgba(30, 45, 35, 0.025);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30, 45, 35, 0.07);
+}
+
+.primary-button {
+  box-shadow: 0 2px 5px rgba(28, 73, 56, 0.08);
+}
+
+.primary-button:active {
+  transform: translateY(1px);
+}
+
+@keyframes taskFormIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .task-form {
+    padding: 18px;
+  }
+
+  .task-form-actions > button {
+    flex: 1;
+  }
+}
+:root[data-theme="dark"] {
+  --cream: #111a15;
+  --white: #1b2820;
+  --text: #edf4ef;
+  --muted: #a5b3a9;
+  --border: #304238;
+  --green-light: #263e30;
+}
+
+:root[data-theme="dark"] .board-column {
+  background: #202d24;
+}
+
+:root[data-theme="dark"] .task-card,
+:root[data-theme="dark"] .search-box,
+:root[data-theme="dark"] .secondary-button,
+:root[data-theme="dark"] .form-group input,
+:root[data-theme="dark"] .form-group textarea,
+:root[data-theme="dark"] .form-group select {
+  background: var(--white);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.project-card,
+.panel,
+.stat-card {
+  box-shadow: 0 3px 14px rgba(28, 73, 56, 0.035);
+}
+
+.project-card:hover {
+  box-shadow: 0 12px 28px rgba(28, 73, 56, 0.09);
+}
